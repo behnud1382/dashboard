@@ -7,6 +7,7 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import AdminCalendarView from '@/views/AdminCalendarView.vue'
 import SignUp from '@/views/SignUp.vue'
+import Userpage from '@/views/Userpage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +51,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignUp
+    },
+    {
+      path: '/userpage',
+      name: 'userpage',
+      components: Userpage
     }
   ]
 })
