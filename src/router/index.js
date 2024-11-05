@@ -7,8 +7,8 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import AdminCalendarView from '@/views/AdminCalendarView.vue'
 import SignUp from '@/views/SignUp.vue'
-import Userpage from '@/views/Userpage.vue'
 import SignUpPage from '@/views/SignUpPage.vue'
+import Userpage from '@/views/Userpage.vue'
 import UserManagementView from '@/views/UserManagementView.vue'
 
 
@@ -54,6 +54,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignUp
+    },
+    {
+      path: '/signuppage',
+      name: 'signupapge',
+      component: SignUpPage
     },
     {
       path: '/userpage',

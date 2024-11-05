@@ -16,36 +16,32 @@ vue
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-export default {
-  data() {
-    return {
-      user: null,
-      fetchError: null // Added to store error messages
-    };
-  },
-  mounted() {
-    // Fetch user data from API
-    axios.get('/api/user')
-      .then(response => {
-        // Log the response for debugging
-        console.log('Response from API:', response);
-        // Check if the response data is in the expected format
-        if (response.data && response.data.name && response.data.email) {
-          this.user = response.data;
-        } else {
-          this.fetchError = 'Unexpected response format.';
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching user data:', error);
-        // Provide more detailed error information
-        this.fetchError = (error.response && error.response.data && error.response.data.message) 
-          ? error.response.data.message 
-          : 'Failed to load user data. Please try again later.'; // Set error message
-      });
+const user = ref(null);
+const fetchError = ref(null);
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/user');
+    console.log('Response from API:', response);
+
+    if (response.data && response.data.name && response.data.email) {
+      user.value = response.data;
+    } else {
+      fetchError.value = 'Unexpected response format.';
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    fetchError.value = (error.response && error.response.data && error.response.data.message) 
+      ? error.response.data.message 
+      : 'Failed to load user data. Please try again later.';
   }
-};
+});
 </script>
+
+<style scoped>
+/* Add any additional styles here if needed */
+</style>
