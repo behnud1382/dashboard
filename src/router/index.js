@@ -6,11 +6,9 @@ import FaqView from '@/views/FaqView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import AdminCalendarView from '@/views/AdminCalendarView.vue'
-import SignUp from '@/views/SignUp.vue'
 import SignUpPage from '@/views/SignUpPage.vue'
-import Userpage from '@/views/Userpage.vue'
 import UserManagementView from '@/views/UserManagementView.vue'
-
+import Userpage from '@/views/Userpage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,22 +51,17 @@ const router = createRouter({
     {
       path: '/signup',
       name: 'signup',
-      component: SignUp
-    },
-    {
-      path: '/signuppage',
-      name: 'signupapge',
       component: SignUpPage
-    },
-    {
-      path: '/userpage',
-      name: 'userpage',
-      components: Userpage
     },
     {
       path: '/usermanagement',
       name: 'usermanagement',
       component: UserManagementView
+    },
+    {
+      path: '/userpage',
+      name: 'userpage',
+      component: Userpage
     }
   ]
 })
