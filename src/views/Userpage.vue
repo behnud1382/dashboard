@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-eslint-disable-next-line vue/multi-word-component-names
+vue
 <template>
-  <div class="max-w-md mx-auto mt-10 p-5 border rounded shadow">
+  <div :class="['max-w-md mx-auto mt-10 p-5 border rounded shadow', isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black']">
     <h2 class="text-xl font-bold mb-4">Send Request to Admin</h2>
     <form @submit.prevent="sendRequest">
       <label for="username" class="block mb-2">Your Name:</label>
@@ -27,15 +27,17 @@ eslint-disable-next-line vue/multi-word-component-names
         Send Request
       </button>
     </form>
+    <button @click="toggleDarkMode" class="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+      Toggle Dark Mode
+    </button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-
 const username = ref('');
 const request = ref('');
-
+const isDarkMode = ref(false);
 const sendRequest = async () => {
   try {
     const response = await fetch('/send-request', {
@@ -45,7 +47,6 @@ const sendRequest = async () => {
       },
       body: JSON.stringify({ username: username.value, request: request.value }),
     });
-
     if (response.ok) {
       alert('Request sent successfully!');
       username.value = '';
@@ -59,8 +60,30 @@ const sendRequest = async () => {
     alert('An error occurred. Please try again later.');
   }
 };
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value;
+};
 </script>
 
 <style>
-/* You can add additional styles here if needed */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.bg-gray-800 {
+  background-color: #2d3748; /* Dark background color */
+}
+
+.bg-white {
+  background-color: #ffffff; /* Light background color */
+}
+
+.text-white {
+  color: #ffffff; /* Light text color */
+}
+
+.text-black {
+  color: #000000; /* Dark text color */
+}
 </style>

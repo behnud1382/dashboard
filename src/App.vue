@@ -43,19 +43,3 @@ onMounted(() => {
     />
   </div>
 </template>
-
-vue
-<template>
-  <div id="app">
-    <UserPage />
-  </div>
-</template>
-
-<script setup>
-// eslint-disable-next-line no-unused-vars
-import UserPage from './components/UserPage.vue';
-</script>
-
-<style>
-/* Global styles can go here */
-</style>
