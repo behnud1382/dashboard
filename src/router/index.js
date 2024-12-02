@@ -9,7 +9,8 @@ import AdminCalendarView from '@/views/AdminCalendarView.vue'
 import SignUpPage from '@/views/SignUpPage.vue'
 import UserManagementView from '@/views/UserManagementView.vue'
 import Userpage from '@/views/Userpage.vue'
-
+import Forgot from '@/views/Forgot.vue'
+import Reset from '@/views/Reset.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -62,6 +63,16 @@ const router = createRouter({
       path: '/userpage',
       name: 'userpage',
       component: Userpage
+    },
+    {
+      path: '/forget',
+      name: 'forget',
+      component: Forgot
+    },
+    {
+      path: '/reset',
+      name: 'reset',
+      component: Reset
     }
   ]
 })

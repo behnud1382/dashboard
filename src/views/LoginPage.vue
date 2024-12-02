@@ -54,6 +54,9 @@
                   type="submit"
                   value="Log In"
                 />
+                <p class="forget-password text-right">
+                  <router-link to="forget">forgetpassword?</router-link>
+                </p>
               </div>
             </form>
 
