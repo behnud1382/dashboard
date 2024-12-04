@@ -10,7 +10,7 @@ vue
           id="username"
           v-model="username"
           required
-          class="w-full p-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600 "
+          class="w-full p-2 text-sm border rounded-lg dark:bg-gray-700 dark:border-gray-600"
         />
         <label for="request" class="block mb-2 dark-mode">Request:</label>
         <textarea

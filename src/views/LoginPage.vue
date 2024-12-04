@@ -55,7 +55,7 @@
                   value="Log In"
                 />
                 <p class="forget-password text-right">
-                  <router-link to="forget">forgetpassword?</router-link>
+                  <router-link to="forget">forget password?</router-link>
                 </p>
               </div>
             </form>
