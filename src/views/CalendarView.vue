@@ -45,7 +45,7 @@
               isSuggestion(date) ? 'bg-green-600 text-white' : 'bg-green-200 dark:bg-green-700 dark:text-black'
             ]"
             title="Suggestion"
-            :disabled="selectedCount >= maxSelection && !isSuggestion(date) && !isLimitation(date)"
+            :disabled="selectedCount >= maxSelection && !isSuggestion(date) && !isLimitation(date) || locked"
           >
             S
           </button>
@@ -58,7 +58,7 @@
               isLimitation(date) ? 'bg-red-600 text-white' : 'bg-red-200 dark:bg-red-700 dark:text-black'
             ]"
             title="Limitation"
-            :disabled="selectedCount >= maxSelection && !isSuggestion(date) && !isLimitation(date)"
+            :disabled="selectedCount >= maxSelection && !isSuggestion(date) && !isLimitation(date) || locked"
           >
             L
           </button>
@@ -74,7 +74,7 @@
       <button 
         @click="saveSelections"
         class="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
-        :disabled="selectedCount === 0"
+        :disabled="selectedCount === 0 || locked"
       >
         Save Selections
       </button>
@@ -84,6 +84,8 @@
 
 <script setup>
 import { ref, computed, inject, onMounted } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from '@/stores/authStore';
 
 const darkMode = inject('darkMode');
 const isDarkMode = darkMode || ref(false);
@@ -95,6 +97,9 @@ const currentSelections = ref(new Map()); // Store temporary selections for the 
 
 // Max number of days a user can select per month (suggestions + limitations)
 const maxSelection = 20;
+
+const errorMessage = ref('');
+const successMessage = ref('');
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const months = [
@@ -136,8 +141,12 @@ const nextMonth = () => {
   loadSelections(); // Load saved selections for the current month
 };
 
+const locked = ref(false);
+
 // Set the selected option (suggestion or limitation) for a given date
 const setOption = (date, option) => {
+  if (locked.value) return;
+
   const dateStr = `${year.value}-${month.value + 1}-${date}`; // Adjust the month number to be 1-based
   console.log(`Clicked on: ${dateStr} | Option: ${option}`);
 
@@ -161,18 +170,72 @@ const setOption = (date, option) => {
   }
 };
 
-// Save selections to localStorage only on button click
-const saveSelections = () => {
-  const key = `${year.value}-${month.value + 1}`; // Key based on year and month
-  localStorage.setItem(key, JSON.stringify(Array.from(currentSelections.value.entries())));
-  alert('Selections saved successfully!');
+
+const saveSelections = async () => {
+  const confirmSave = confirm(
+    "Are you sure you want to save your selections? You will not be able to change them afterward."
+  );
+
+  if (!confirmSave) {
+    return; // Exit if the user cancels the action
+  }
+  
+  const suggestions = [];
+  const limitations = [];
+
+  currentSelections.value.forEach((value, date) => {
+    if (value === 'suggestion') suggestions.push(date);
+    if (value === 'limitation') limitations.push(date);
+  });
+
+  const authStore = useAuthStore();
+  const userId = authStore.userId;
+
+  try {
+    if (suggestions.length > 0) {
+      await axios.put('http://localhost:3000/shift/assign/suggestion', {
+        userId: userId,
+        suggestionDates: suggestions
+      });
+    }
+
+    if (limitations.length > 0) {
+      await axios.put('http://127.0.0.1:3000/shift/assign/limitation', {
+        userId: userId,
+        limitationDates: limitations
+      });
+    }
+    
+    successMessage.value = "Selections saved successfully!";
+    locked.value = true;
+  } catch( error) {
+    console.error("Error saving selections:", error.message);
+    errorMessage.value = "Failed to save selections.";
+  }
 };
 
-// Load selections from localStorage when the component is mounted or when switching months
-const loadSelections = () => {
-  const key = `${year.value}-${month.value + 1}`; // Key based on year and month
-  const selections = localStorage.getItem(key);
-  currentSelections.value = selections ? new Map(JSON.parse(selections)) : new Map();
+const loadSelections = async () => {
+  const authStore = useAuthStore();
+  const userId = authStore.userId;
+
+  try {
+    const suggestionResponse = await axios.get(`http://localhost:3000/shift/suggestions/${userId}`);     
+    const limitationResponse = await axios.get(`http://localhost:3000/shift/limitations/${userId}`);
+    
+    currentSelections.value.clear();
+    (suggestionResponse.data || []).forEach((date) => {
+      currentSelections.value.set(date, 'suggestion');
+    });
+
+    (limitationResponse.data || []).forEach((date) => {
+      currentSelections.value.set(date, 'limitation');
+    });
+
+    console.log("Loaded selections:", currentSelections.value);
+  } catch (error) {
+    console.error("Error loading selections:", error.message);
+    errorMessage.value = 'Failed to load selections.';
+  }
 };
 
 // Computed properties to track selected options

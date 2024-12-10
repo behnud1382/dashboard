@@ -2,38 +2,44 @@ import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    isLoggedIn: false,
-    isAdmin: false,
-    jwtToken: undefined,
-    sessionExpiryTime: null
+    _isLoggedIn: false,
+    _isAdmin: false,
+    _jwtToken: undefined,
+    _sessionExpiryTime: null,
+    _userId: undefined,
+    _email: undefined
   }),
   getters: {
-    isLoggedIn: (state) => state.isLoggedIn,
-    isAdmin: (state) => state.isAdmin,
-    jwtToken: (state) => state.jwtToken,
+    isLoggedIn: (state) => state._isLoggedIn,
+    isAdmin: (state) => state._isAdmin,
+    jwtToken: (state) => state._jwtToken,
+    userId: (state) => state._userId,
+    email: (state) => state._email,
     isSessionExpired: (state) => {
-      if (!state.sessionExpiryTime) return true
-      return new Date() > new Date(state.sessionExpiryTime)
+      if (!state._sessionExpiryTime) return true
+      return new Date() > new Date(state._sessionExpiryTime)
     }
   },
   actions: {
     login() {
-      this.isLoggedIn = true
+      this._isLoggedIn = true
     },
     setAdmin() {
-      this.isAdmin = true
+      this._isAdmin = true
     },
     logout() {
-      this.isLoggedIn = false
-      this.isAdmin = false
-      this.jwtToken = undefined
-      this.sessionExpiryTime = null
+      this._isLoggedIn = false
+      this._isAdmin = false
+      this._jwtToken = undefined
+      this._sessionExpiryTime = null
     },
-    setJwtToken(token) {
-      this.jwtToken = token
-      this.isLoggedIn = true
+    setJwtToken(token, userId, email) {
+      this._jwtToken = token
+      this._isLoggedIn = true
+      this._userId = userId
+      this._email = email
       const expirationTime = new Date().getTime() + 60 * 60 * 1000
-      this.sessionExpiryTime = new Date(expirationTime).toISOString()
+      this._sessionExpiryTime = new Date(expirationTime).toISOString()
     }
   }
 })
