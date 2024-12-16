@@ -1,4 +1,3 @@
-vue
 <template>
   <div class="flex items-center justify-center min-h-screen">
     <form @submit.prevent="handleSubmit" class="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
@@ -14,21 +13,17 @@ vue
         />
       </div>
       <button 
+        type="submit"
         class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
         Submit
       </button>
-      <div class="w-full flex justify-center">
-        <router-link 
-        to="/Reset.vue"
-        >
-      </router-link>
-      </div>
     </form>
   </div>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
 import axios from 'axios' 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -41,10 +36,13 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        const response = await axios.post('forget', {
-          email: this.email
-        }); 
-        console.log(response);
+        //const response = await axios.post('forget', {
+          //email: this.email
+        //});
+        //console.log(response);
+        
+        // Navigate to the reset password page after successful submission
+        this.$router.push('/resetpassword');
       } catch (error) {
         console.error("There was an error!", error);
       }

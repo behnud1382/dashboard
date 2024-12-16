@@ -1,3 +1,5 @@
+vue
+<!-- eslint-disable vue/no-parsing-error -->
 <script setup>
 import SideBar from './components/SideBar.vue'
 import { RouterView, useRoute } from 'vue-router'
@@ -6,7 +8,6 @@ import { themeStore } from './stores/themeStore'
 
 const route = useRoute()
 const darkMode = ref(false)
-
 const theme = themeStore()
 
 // Provide darkMode globally for all components
@@ -34,12 +35,10 @@ onMounted(() => {
 
 <template>
   <div class="dark:bg-gray-800 w-full min-h-full">
-    <!-- Conditionally render the sidebar except on the login route -->
-    <SideBar v-if="route.name !== 'login'" @search-input-emit="search" :is-used-vue-router="true" />
-
+    <!-- Conditionally render the sidebar except on the login and signup routes -->
+    <SideBar v-if="route.name !== 'login' && route.name !== 'signup'" @search-input-emit="search" :is-used-vue-router="true" />
+    
     <!-- Render the current route's component -->
-    <RouterView
-      :class="route.name === 'login' ? 'ml-0' : theme.sidebarOpen ? 'ml-[250px]' : 'ml-[78px]'"
-    />
+    <RouterView :class="route.name === 'login' || route.name === 'signup' ? 'ml-0' : theme.sidebarOpen ? 'ml-[250px]' : 'ml-[78px]'" />
   </div>
 </template>

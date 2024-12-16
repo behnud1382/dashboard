@@ -23,8 +23,10 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
 import axios from 'axios' 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Forgot',
   data() {
     return {
