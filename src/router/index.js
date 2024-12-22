@@ -8,6 +8,7 @@ import LoginPage from '@/views/LoginPage.vue'
 import AdminCalendarView from '@/views/AdminCalendarView.vue'
 import SignUpPage from '@/views/SignUpPage.vue'
 import UserManagementView from '@/views/UserManagementView.vue'
+import Adminview from '@/views/Adminview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,6 +57,11 @@ const router = createRouter({
       path: '/usermanagement',
       name: 'usermanagement',
       component: UserManagementView
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Adminview
     }
   ]
 })
