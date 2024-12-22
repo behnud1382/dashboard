@@ -37,15 +37,15 @@ const role = ref("admin"); // Change this to "user" to test user-specific view
 
 // Dynamic menu based on user role
 const adminMenu = [
-  { name: "Dashboard", link: "#dashboard", icon: "📊" },
-  { name: "Calendar", link: "#calendar", icon: "📅" },
-  { name: "Admin Calendar", link: "#admin-calendar", icon: "🗓️" },
-  { name: "User Management", link: "#user-management", icon: "👥" },
+  { name: "Dashboard", link: "/dashboard", icon: "📊" },
+  { name: "Calendar", link: "/calendar", icon: "📅" },
+  { name: "AdminCalendar", link: "/admincalendar", icon: "🗓️" },
+  { name: "UserManagement", link: "/usermanagement", icon: "👥" },
 ];
 
 const userMenu = [
-  { name: "Dashboard", link: "#dashboard", icon: "📊" },
-  { name: "Calendar", link: "#calendar", icon: "📅" },
+  { name: "Dashboard", link: "/dashboard", icon: "📊" },
+  { name: "Calendar", link: "/calendar", icon: "📅" },
 ];
 
 // Set the menu items dynamically based on the role
