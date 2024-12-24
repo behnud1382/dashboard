@@ -4,8 +4,6 @@ import MenuItem from './MenuItem.vue'
 import { useRouter } from 'vue-router'
 import { themeStore } from '@/stores/themeStore';
 
-
-
 const router = useRouter()
 
 const theme = themeStore()
@@ -207,6 +205,11 @@ const tooltipAttached = () => {
 </script>
 
 <template>
+    <div class="sidebar">
+    <MenuItem title="Calendar" to="/calendar" v-if="userRole === 'user'" />
+    <MenuItem title="AdminCalendar" to="/admincalendar" v-if="userRole === 'admin'" />
+    <MenuItem title="UserManagement" to="/usermanagement" v-if="userRole === 'admin'" />
+  </div>
   <div class="sidebar" :class="theme.sidebarOpen ? 'open' : ''" :style="cssVars">
     <div class="logo-details" style="margin: 6px 14px 0 14px">
       <img v-if="menuLogo" :src="menuLogo" alt="menu-logo" class="menu-logo icon" />
