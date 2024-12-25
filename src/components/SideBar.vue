@@ -1,4 +1,6 @@
 <script setup>
+// eslint-disable-next-line no-unused-vars
+import { useAuthStore } from '@/stores/authStore'
 import { computed, onMounted } from 'vue'
 import MenuItem from './MenuItem.vue'
 import { useRouter } from 'vue-router'
@@ -7,6 +9,12 @@ import { themeStore } from '@/stores/themeStore'
 const router = useRouter()
 
 const theme = themeStore()
+
+// eslint-disable-next-line no-undef
+const authStore = userAuthstore();
+const userRole = computed(() => authStore.userRole);
+// eslint-disable-next-line no-unused-vars
+const isAuthenticated = computed(() => authStore.userRole)
 
 const props = defineProps({
   isMenuOpen: {
@@ -134,11 +142,16 @@ const props = defineProps({
     type: String,
     default: '#fff'
   },
-
-  userRole: {
+  // eslint-disable-next-line no-dupe-keys
+  isUsedVueRouter: {
+    type: Boolean,
+    default: false
+  },
+  // eslint-disable-next-line no-dupe-keys
+  menuTitle: {
     type: String,
-    default: 'user'
-  }
+    default: 'MobinDash'
+  },
 })
 
 const emit = defineEmits(['search-input-emit', 'menuItemClcked', 'button-exit-clicked'])
