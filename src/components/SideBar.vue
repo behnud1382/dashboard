@@ -2,7 +2,7 @@
 import { computed, onMounted } from 'vue'
 import MenuItem from './MenuItem.vue'
 import { useRouter } from 'vue-router'
-import { themeStore } from '@/stores/themeStore';
+import { themeStore } from '@/stores/themeStore'
 
 const router = useRouter()
 
@@ -133,6 +133,11 @@ const props = defineProps({
   menuFooterTextColor: {
     type: String,
     default: '#fff'
+  },
+
+  userRole: {
+    type: String,
+    default: 'user'
   }
 })
 
@@ -178,8 +183,6 @@ onMounted(() => {
   tooltipAttached()
 })
 
-
-
 const tooltipAttached = () => {
   const tooltips = document.querySelectorAll('.tooltip')
   tooltips.forEach((tooltip) => {
@@ -200,12 +203,11 @@ const tooltipAttached = () => {
       tooltip.classList.remove('active')
     })
   })
-};
-
+}
 </script>
 
 <template>
-    <div class="sidebar">
+  <div class="sidebar">
     <MenuItem title="Calendar" to="/calendar" v-if="userRole === 'user'" />
     <MenuItem title="AdminCalendar" to="/admincalendar" v-if="userRole === 'admin'" />
     <MenuItem title="UserManagement" to="/usermanagement" v-if="userRole === 'admin'" />
