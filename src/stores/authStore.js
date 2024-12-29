@@ -8,8 +8,6 @@ export const useAuthStore = defineStore('auth', {
     _sessionExpiryTime: null,
     _userId: undefined,
     _email: undefined,
-    userRole: 'user',
-    isAuthenticated: false,
   }),
   getters: {
     isLoggedIn: (state) => state._isLoggedIn,
@@ -43,11 +41,5 @@ export const useAuthStore = defineStore('auth', {
       const expirationTime = new Date().getTime() + 60 * 60 * 1000
       this._sessionExpiryTime = new Date(expirationTime).toISOString()
     },
-    setUserRole(role){
-      this.userRole = role
-    },
-    setIsAuthenticated(status){
-      this.isAuthenticated = status;
-    }
   }
 })

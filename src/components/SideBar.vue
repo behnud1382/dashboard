@@ -1,20 +1,15 @@
 <script setup>
-// eslint-disable-next-line no-unused-vars
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore } from '@/stores/authStore';
 import { computed, onMounted } from 'vue'
 import MenuItem from './MenuItem.vue'
 import { useRouter } from 'vue-router'
 import { themeStore } from '@/stores/themeStore'
 
-const router = useRouter()
-
-const theme = themeStore()
-
-// eslint-disable-next-line no-undef
-const authStore = userAuthstore();
-const userRole = computed(() => authStore.userRole);
 // eslint-disable-next-line no-unused-vars
-const isAuthenticated = computed(() => authStore.userRole)
+const auth = useAuthStore();
+
+const router = useRouter()
+const theme = themeStore()
 
 const props = defineProps({
   isMenuOpen: {
@@ -142,21 +137,9 @@ const props = defineProps({
     type: String,
     default: '#fff'
   },
-  // eslint-disable-next-line no-dupe-keys
-  isUsedVueRouter: {
-    type: Boolean,
-    default: false
-  },
-  // eslint-disable-next-line no-dupe-keys
-  menuTitle: {
-    type: String,
-    default: 'MobinDash'
-  },
 })
 
 const emit = defineEmits(['search-input-emit', 'menuItemClcked', 'button-exit-clicked'])
-
-// const isOpened = ref(false)
 
 const cssVars = computed(() => ({
   '--bg-color': props.bgColor,
@@ -217,14 +200,56 @@ const tooltipAttached = () => {
     })
   })
 }
+
+const userRole = computed(() => useAuthStore.userRole) // This assumes you have a store that holds user role
+
+const dynamicMenuItems = computed(() => {
+  let baseItems = [
+    {
+      link: '/',
+      name: 'Dashboard',
+      tooltip: 'Dashboard',
+      icon: 'bx-grid-alt'
+    }
+  ]
+
+  if (userRole.value === 'admin') {
+    baseItems.push(
+      {
+        link: '/admincalendar',
+        name: 'Admin Calendar',
+        tooltip: 'Admin Calendar',
+        icon: 'bx-calendar'
+      },
+      {
+        link: '/usermanagement',
+        name: 'User Management',
+        tooltip: 'User Management',
+        icon: 'bx-group'
+      }
+    )
+  } else {
+    baseItems.push({
+      link: '/calendar',
+      name: 'Calendar',
+      tooltip: 'Calendar',
+      icon: 'bx-calendar'
+    })
+  }
+
+  baseItems.push({
+    link: '/settings',
+    name: 'Settings',
+    tooltip: 'Settings',
+    icon: 'bx-cog'
+  })
+
+  return baseItems
+})
+
 </script>
 
 <template>
-  <div class="sidebar">
-    <MenuItem title="Calendar" to="/calendar" v-if="userRole === 'user'" />
-    <MenuItem title="AdminCalendar" to="/admincalendar" v-if="userRole === 'admin'" />
-    <MenuItem title="UserManagement" to="/usermanagement" v-if="userRole === 'admin'" />
-  </div>
   <div class="sidebar" :class="theme.sidebarOpen ? 'open' : ''" :style="cssVars">
     <div class="logo-details" style="margin: 6px 14px 0 14px">
       <img v-if="menuLogo" :src="menuLogo" alt="menu-logo" class="menu-logo icon" />
@@ -238,15 +263,7 @@ const tooltipAttached = () => {
       />
     </div>
 
-    <div
-      style="
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        flex-grow: 1;
-        max-height: calc(100% - 60px);
-      "
-    >
+    <div style="display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; max-height: calc(100% - 60px);">
       <div id="my-scroll" style="margin: 6px 14px 0 14px">
         <ul class="nav-list" style="overflow: visible">
           <li id="links_search" v-if="isSearch" @click="openMenu">
@@ -255,26 +272,17 @@ const tooltipAttached = () => {
             <span data-target="links_search" class="tooltip">{{ searchTooltip }}</span>
           </li>
           <MenuItem
-            v-for="(menuItem, index) in menuItems"
+            v-for="(menuItem, index) in dynamicMenuItems"
             :key="index"
             :menu-item="menuItem"
-            :id="index"
             :is-used-vue-router="isUsedVueRouter"
             @menu-item-clicked="menuItemClicked"
           />
         </ul>
       </div>
 
-      <div v-if="isLoggedIn" class="profile">
-        <div class="profile-details">
-          <img v-if="profileImg" :src="profileImg" alt="profileImg" />
-          <i v-else class="bx bxs-user-rectangle" />
-          <div class="name_job">
-            <div class="name">{{ profileName }}</div>
-            <div class="job">{{ profileRole }}</div>
-          </div>
-        </div>
-        <i v-if="isExitButton" class="bx bx-log-out" id="log_out" @click.stop="exitButtonClicked" />
+      <div v-if="isExitButton" class="bottom-bar">
+        <button class="exit-btn" @click="exitButtonClicked">Exit</button>
       </div>
     </div>
   </div>
