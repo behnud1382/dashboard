@@ -201,7 +201,7 @@ const tooltipAttached = () => {
   })
 }
 
-const userRole = computed(() => useAuthStore.userRole) // This assumes you have a store that holds user role
+const authStore = useAuthStore() // This assumes you have a store that holds user role
 
 const dynamicMenuItems = computed(() => {
   let baseItems = [
@@ -213,7 +213,7 @@ const dynamicMenuItems = computed(() => {
     }
   ]
 
-  if (userRole.value === 'admin') {
+  if (authStore.value === 'admin') {
     baseItems.push(
       {
         link: '/admincalendar',
@@ -242,7 +242,14 @@ const dynamicMenuItems = computed(() => {
     name: 'Settings',
     tooltip: 'Settings',
     icon: 'bx-cog'
-  })
+  },
+  {
+    link: '/faq',
+    name: 'Faq',
+    tooltip: 'Faq',
+    icon: 'bx-message-dots'
+  }
+)
 
   return baseItems
 })
