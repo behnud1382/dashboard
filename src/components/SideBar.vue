@@ -1,15 +1,22 @@
 <script setup>
 import { useAuthStore } from '@/stores/authStore';
 import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUpdated } from 'vue'
 import MenuItem from './MenuItem.vue'
 import { useRouter } from 'vue-router'
 import { themeStore } from '@/stores/themeStore'
+import { useAuthStore } from '@/stores/authStore'
+
+// eslint-disable-next-line no-unused-vars
+
 
 // eslint-disable-next-line no-unused-vars
 const auth = useAuthStore();
 
+
 const router = useRouter()
 const theme = themeStore()
+const auth = useAuthStore()
 
 const props = defineProps({
   isMenuOpen: {
@@ -38,32 +45,7 @@ const props = defineProps({
   },
   menuItems: {
     type: Array,
-    default: () => [
-      {
-        link: '/',
-        name: 'Dashboard',
-        tooltip: 'Dashboard',
-        icon: 'bx-grid-alt'
-      },
-      {
-        link: '/calendar',
-        name: 'Calendar',
-        tooltip: 'Calendar',
-        icon: 'bx-calendar'
-      },
-      {
-        link: '/settings',
-        name: 'Settings',
-        tooltip: 'Settings',
-        icon: 'bx-cog'
-      },
-      {
-        link: '/faq',
-        name: 'FAQ',
-        tooltip: 'FAQ',
-        icon: 'bx-message-dots'
-      }
-    ]
+    default: () => []
   },
   isSearch: {
     type: Boolean,
@@ -176,9 +158,11 @@ const exitButtonClicked = () => {
 
 onMounted(() => {
   theme.setSidebarValue(props.isMenuOpen)
-  tooltipAttached()
 })
 
+onUpdated(() => {
+  tooltipAttached()
+})
 const tooltipAttached = () => {
   const tooltips = document.querySelectorAll('.tooltip')
   tooltips.forEach((tooltip) => {
@@ -201,7 +185,9 @@ const tooltipAttached = () => {
   })
 }
 
+
 const authStore = useAuthStore() // This assumes you have a store that holds user role
+
 
 const dynamicMenuItems = computed(() => {
   let baseItems = [
@@ -213,7 +199,10 @@ const dynamicMenuItems = computed(() => {
     }
   ]
 
+
   if (authStore.value === 'admin') {
+
+  if (auth.isAdmin) {
     baseItems.push(
       {
         link: '/admincalendar',
@@ -252,8 +241,25 @@ const dynamicMenuItems = computed(() => {
 )
 
   return baseItems
-})
+}
 
+  baseItems.push(
+    {
+      link: '/settings',
+      name: 'Settings',
+      tooltip: 'Settings',
+      icon: 'bx-cog'
+    },
+    {
+      link: '/faq',
+      name: 'Faq',
+      tooltip: 'Faq',
+      icon: 'bx-message-dots'
+    }
+  )
+
+  return baseItems
+})
 </script>
 
 <template>
